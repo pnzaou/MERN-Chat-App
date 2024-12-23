@@ -30,8 +30,6 @@ const signUp = async (req, res) => {
             password: hashedPaswword
         })
 
-        generateToken(newUser._id, res)
-
         return res.status(201).json({message: "Inscription réussie", newUser})
 
     } catch (error) {
