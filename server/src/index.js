@@ -12,7 +12,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
     }))
-    .use(express.json())
+    .use(express.json({limit:'10mb'}))
     .use(cookieParser())
     .use("/api/auth", authRoutes)
     .use("/api/message", messageRoutes)

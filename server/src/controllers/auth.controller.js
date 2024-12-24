@@ -75,14 +75,14 @@ const logout = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const {profilPic} = req.body
+    const {profilePic} = req.body
     const userId = req.user._id
     try {
-        if(!profilPic) {
+        if(!profilePic) {
             return res.status(400).json({message: "Veuillez choisir une photo"})
         }
 
-        const rep = await cloudinary.uploader.upload(profilPic)
+        const rep = await cloudinary.uploader.upload(profilePic)
         const updatedUser = await User.findByIdAndUpdate(userId, {profilPic: rep.secure_url}, {new: true})
 
         return res.status(200).json({message: "Photo de profil mis à jour.", updatedUser})

@@ -7,11 +7,12 @@ export const useAuthStore = create((set) => ({
     authUser: null,
     isSigningUp: false,
     isLogginingIn: false,
+    isUpdatingProfile: false,
     isCheckingAuth: true,
     checkAuth: async () => {
         try {
             const rep = await axiosInstance.get("/auth/check")
-            set({authUser:rep})
+            set({authUser: rep.data})
         } catch (error) {
             console.log(error);
             set({authUser:null})
@@ -54,6 +55,21 @@ export const useAuthStore = create((set) => ({
             toast.success(rep.data.message)
         } catch (error) {
             toast.error(error.response?.data?.message || "Erreur ! Veuillez réessayer")
+        }
+    },
+
+    updateProfile: async (data) => {
+        console.log(data);
+        set({isUpdatingProfile: true})
+        try {
+            const rep = await axiosInstance.put("/auth/update-profile", data)
+            set({authUser: rep.data.updatedUser})
+            toast.success(rep.data.message)
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || "Erreur ! Veuillez réessayer")
+        } finally {
+            set({isUpdatingProfile: false})
         }
     }
 }))
