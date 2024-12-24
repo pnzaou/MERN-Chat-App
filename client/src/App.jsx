@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import {useAuthStore} from "./store/useAuthStore"
+import {useThemeStore} from "./store/useThemeStore"
 import Navbar from "./components/Navbar"
 import SignUpPage from "./pages/SignUpPage"
 import LoginPage from "./pages/LoginPage"
@@ -12,6 +13,7 @@ import { Toaster } from "react-hot-toast"
 
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth} = useAuthStore()
+  const {theme} = useThemeStore()
 
   useEffect(() => {
     checkAuth()
@@ -26,7 +28,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div data-theme={theme}>
       <Navbar/>
       <Routes>
         <Route path="/" element={authUser ? <HomePage/> : <Navigate to="/login" />}/>

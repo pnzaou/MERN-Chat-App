@@ -25,7 +25,7 @@ const getMessages = async (req, res) => {
             ]
         })
 
-        return res.status(200).json({messages})
+        return res.status(200).json(messages)
     } catch (error) {
         console.log("Erreur dans message.controller(getMessages)", error.message);
         return res.status(500).json({message: "Erreur Serveur"})
@@ -57,7 +57,7 @@ const sendMessage = async (req, res) => {
         
     } catch (error) {
         console.log("Erreur dans message.controller(sendMessage)", error.message);
-        return res.status(500).json({message: "Erreur Serveur"})
+        return res.status(500).json({message: "Erreur lors de l'envoi! Veuillez réessayer."})
     }
 }
 
