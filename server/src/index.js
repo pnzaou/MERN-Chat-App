@@ -5,7 +5,8 @@ const cors = require("cors")
 const connectDB = require("./lib/db")
 const authRoutes = require("./routes/auth.route")
 const messageRoutes = require("./routes/message.route")
-const app = express()
+const { app, server } = require("./lib/socket")
+
 const PORT = process.env.PORT
 
 app.use(cors({
@@ -17,7 +18,7 @@ app.use(cors({
     .use("/api/auth", authRoutes)
     .use("/api/message", messageRoutes)
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server: http://localhsot:${PORT}`);
     connectDB()
 })

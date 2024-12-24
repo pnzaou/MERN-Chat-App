@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
@@ -8,10 +8,13 @@ const Sidebar = () => {
 
     const {getUsers, users, selectedUser,setSelectedUser, isUsersLoading} = useChatStore()
     const {onlineUsers} = useAuthStore()
+    const [showOnlineOnly, setShowOnlineOnly] = useState(false)
 
     useEffect(() => {
         getUsers()
     }, [getUsers])
+
+    const filterdUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
 
     if(isUsersLoading) return <SidebarSkeleton/>
     return (
@@ -22,10 +25,22 @@ const Sidebar = () => {
                     <span className="font-medium hidden lg:block">Contacts</span>
                 </div>
                 {/* Plus tard */}
+                <div className="mt-3 hidden lg:flex items-center gap-2">
+                    <label className="cursor-pointer flex items-center gap-2">
+                        <input
+                         type="checkbox"
+                         checked={showOnlineOnly}
+                         onChange={(e) => setShowOnlineOnly(e.target.checked)}
+                         className="checkbox checkbox-sm" 
+                        />
+                        <span className="text-sm">Utilisateurs en ligne</span>
+                    </label>
+                    <span className="text-xs text-zinc-500">({onlineUsers.length - 1} en ligne)</span>
+                </div>
             </div>
 
             <div className="overflow-y-auto w-full py-3">
-               {users.map((user) => (
+               {filterdUsers.map((user) => (
                 <button
                  key={user._id}
                  onClick={() => setSelectedUser(user)}
@@ -42,7 +57,7 @@ const Sidebar = () => {
                             className="size-12 object-cover rounded-full" 
                         />
                         {onlineUsers.includes(user._id) && (
-                            <span className="absolue bottom-0 right-0 size-3 bg-green-500
+                            <span className="absolute bottom-0 right-0 size-3 bg-green-500
                             rounded-full ring-2 ring-zinc-900"/>
                         )}
                     </div>
@@ -54,7 +69,13 @@ const Sidebar = () => {
                         </div>
                     </div>
                 </button>
-               ))} 
+               ))}
+
+               {filterdUsers.length === 0 && (
+                <div className="text-center text-zinc-500 py-4">
+                    Aucun utilisateur connecté
+                </div>
+               )}
             </div>
         </aside>
     );

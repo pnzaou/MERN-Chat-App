@@ -1,6 +1,7 @@
 const User = require("../models/user.model")
 const Message = require("../models/message.model")
 const cloudinary = require("../lib/cloudinary")
+const { getReceiverSocketId, io } = require("../lib/socket")
 
 const getUsersForSideBar = async (req, res) => {
     const loggedInUserId = req.user._id
@@ -52,6 +53,11 @@ const sendMessage = async (req, res) => {
             text,
             image: imageUrl
         })
+
+        const receiverSocketId = getReceiverSocketId(receiverId)
+        if(receiverSocketId) {
+           io.to(receiverSocketId).emit("newMessage", newMessage)
+        }
 
         return res.status(201).json({message: "Message envoyé", newMessage})
         
